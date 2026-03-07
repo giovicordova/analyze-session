@@ -9,7 +9,7 @@ A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) plugin that anal
 - **Quality metrics** from Claude's self-assessed facets (outcome, helpfulness, friction)
 - **Issue detection** with fix suggestions (high token turns, tool errors, cache cost, friction patterns)
 - **Two scopes**: single-session deep dive or cross-session project trends
-- **Fix companion**: reads the report and guides you through implementing fixes
+- **Fix companion**: reads the report, guides fixes, and auto-applies safe ones
 
 ## Install
 
@@ -24,18 +24,24 @@ No dependencies — uses Python stdlib only.
 
 ## Usage
 
-In any Claude Code session:
+### Analyze a session
 
 ```
-/analyze-session:analyze-session
+/analyze-session:analyze
 ```
 
 The report is saved as `SESSION-ANALYSIS.md` at the root of the project being analyzed.
 
-To fix issues from the report:
+### Fix issues from the report
 
 ```
-/analyze-session:fix-session
+/analyze-session:analyze --fix
+```
+
+### Auto-apply safe fixes
+
+```
+/analyze-session:analyze --fix --apply
 ```
 
 ### Options
@@ -46,13 +52,32 @@ To fix issues from the report:
 | `--project` | current directory | Project path to analyze |
 | `--scope` | `session` | `session` for single session, `project` for all sessions |
 | `--output` | `./SESSION-ANALYSIS.md` | Report output path |
+| `--fix` | off | Switch to fix mode (reads existing report) |
+| `--apply` | off | Auto-apply low-risk fixes (with `--fix`) |
 
 ### Examples
 
 ```
-/analyze-session:analyze-session                              # latest session, current project
-/analyze-session:analyze-session latest --scope project       # all sessions for current project
-/analyze-session:analyze-session abc123-def --project ~/myapp # specific session, specific project
+/analyze-session:analyze                                       # latest session, current project
+/analyze-session:analyze latest --scope project                # all sessions for current project
+/analyze-session:analyze abc123-def --project ~/myapp          # specific session, specific project
+/analyze-session:analyze --fix                                 # discuss fixes from report
+/analyze-session:analyze --fix --apply                         # auto-apply + discuss
+```
+
+### Standalone / hook usage
+
+```bash
+# Run directly from terminal
+./skills/analyze/scripts/run-analysis.sh --scope project
+
+# Run and commit the report
+./skills/analyze/scripts/run-analysis.sh --commit
+
+# Run analysis + fix + auto-apply
+./skills/analyze/scripts/run-analysis.sh --fix --apply
+
+# Wire to a Claude Code Stop hook — see hooks/hooks.json.example
 ```
 
 ## Sample output
@@ -95,6 +120,16 @@ The skill reads from Claude Code's local data stores (no API calls):
 - `~/.claude/usage-data/session-meta/` — tokens, tools, duration, errors
 - `~/.claude/usage-data/facets/` — outcomes, satisfaction, friction
 - `~/.claude/projects/{encoded-path}/` — full transcripts with per-message token breakdown
+
+## Testing
+
+```bash
+# Validate report structure
+python3 tests/validate-report.py tests/sample-report.md
+
+# Validate any report
+python3 tests/validate-report.py ./SESSION-ANALYSIS.md
+```
 
 ## License
 

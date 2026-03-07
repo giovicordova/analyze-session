@@ -1,9 +1,9 @@
 {
   "name": "analyze-session",
   "description": "Analyze and fix Claude Code session performance, token usage, cost, and tool efficiency.",
-  "version": "1.0.0",
+  "version": "2.0.1",
   "author": {
-    "name": "Gio Cordova"
+    "name": "giovicordova"
   },
   "repository": "https://github.com/giovicordova/analyze-session"
 }

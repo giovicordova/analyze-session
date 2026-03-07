@@ -2,34 +2,18 @@
 
 Plugin for analyzing and fixing Claude Code session performance, token usage, cost, and tool efficiency.
 
-## Structure
-
-```
-analyze-session/
-├── .claude-plugin/
-│   └── plugin.json
-├── skills/
-│   ├── analyze-session/
-│   │   ├── SKILL.md
-│   │   └── scripts/
-│   │       └── analyze.py
-│   └── fix-session/
-│       ├── SKILL.md
-│       └── scripts/
-│           └── fix-report.py
-├── CLAUDE.md
-├── README.md
-└── VISION.md
-```
+See README.md for project overview and usage.
 
 ## Skills
 
-- `/analyze-session:analyze-session` — Analyze a session or project. Outputs `SESSION-ANALYSIS.md` at the project root.
-- `/analyze-session:fix-session` — Read a report and guide fixes interactively.
+- `/analyze-session:analyze` — Analyze a session or project. Outputs `SESSION-ANALYSIS.md` at the project root.
+- `/analyze-session:analyze --fix` — Read a report and guide fixes interactively.
+- `/analyze-session:analyze --fix --apply` — Auto-apply low-risk fixes.
 
 ## Testing
 
-Run `/analyze-session:analyze-session` in any Claude Code session to exercise the skill end-to-end.
+- Run `/analyze-session:analyze` in any Claude Code session to exercise the skill end-to-end.
+- Run `python3 tests/validate-report.py tests/sample-report.md` to validate report parsing.
 
 ## Conventions
 
