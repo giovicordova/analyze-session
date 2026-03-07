@@ -48,7 +48,7 @@ The report is saved as `SESSION-ANALYSIS.md` at the root of the project being an
 
 | Param | Default | Description |
 |-------|---------|-------------|
-| `session_id` | `latest` | Session UUID or "latest" |
+| `session_id` | `latest` | Session UUID or `latest` |
 | `--project` | current directory | Project path to analyze |
 | `--scope` | `session` | `session` for single session, `project` for all sessions |
 | `--output` | `./SESSION-ANALYSIS.md` | Report output path |
@@ -65,10 +65,12 @@ The report is saved as `SESSION-ANALYSIS.md` at the root of the project being an
 /analyze-session:analyze --fix --apply                         # auto-apply + discuss
 ```
 
-### Standalone / hook usage
+### Standalone usage
+
+The analysis scripts can also be run directly from a terminal or wired to a Claude Code hook:
 
 ```bash
-# Run directly from terminal
+# Run directly
 ./skills/analyze/scripts/run-analysis.sh --scope project
 
 # Run and commit the report
@@ -76,8 +78,14 @@ The report is saved as `SESSION-ANALYSIS.md` at the root of the project being an
 
 # Run analysis + fix + auto-apply
 ./skills/analyze/scripts/run-analysis.sh --fix --apply
+```
 
-# Wire to a Claude Code Stop hook — see hooks/hooks.json.example
+The plugin includes a Stop hook (`hooks/hooks.json`) that auto-runs analysis when a session ends. To disable it, remove or rename `hooks/hooks.json`.
+
+To export the plugin as a zip for sharing:
+
+```bash
+./scripts/export-plugin.sh
 ```
 
 ## Sample output
@@ -115,20 +123,42 @@ The report is saved as `SESSION-ANALYSIS.md` at the root of the project being an
 
 ## Data sources
 
-The skill reads from Claude Code's local data stores (no API calls):
+Reads from Claude Code's local data stores (no API calls):
 
 - `~/.claude/usage-data/session-meta/` — tokens, tools, duration, errors
 - `~/.claude/usage-data/facets/` — outcomes, satisfaction, friction
 - `~/.claude/projects/{encoded-path}/` — full transcripts with per-message token breakdown
 
+## Plugin structure
+
+```
+analyze-session/
+├── .claude-plugin/
+│   └── plugin.json              # plugin manifest
+├── skills/
+│   └── analyze/
+│       ├── SKILL.md             # skill definition
+│       └── scripts/
+│           ├── analyze.py       # analysis engine
+│           ├── fix-report.py    # fix plan generator
+│           └── run-analysis.sh  # standalone runner
+├── hooks/
+│   ├── hooks.json               # Stop hook (auto-analyze on session end)
+│   └── hooks.json.example       # hook config reference
+├── scripts/
+│   └── export-plugin.sh         # zip exporter for distribution
+├── tests/
+│   ├── sample-report.md         # reference report
+│   └── validate-report.py       # report validator
+├── CLAUDE.md
+├── CHANGELOG.md
+└── README.md
+```
+
 ## Testing
 
 ```bash
-# Validate report structure
 python3 tests/validate-report.py tests/sample-report.md
-
-# Validate any report
-python3 tests/validate-report.py ./SESSION-ANALYSIS.md
 ```
 
 ## License

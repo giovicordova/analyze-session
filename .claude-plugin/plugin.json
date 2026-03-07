@@ -1,6 +1,6 @@
 {
   "name": "analyze-session",
-  "description": "Analyze and fix Claude Code session performance, token usage, cost, and tool efficiency.",
+  "description": "Claude Code plugin that analyzes session performance, token costs, cache efficiency, tool usage, and quality metrics. Produces actionable Markdown reports.",
   "version": "2.0.1",
   "author": {
     "name": "giovicordova"
