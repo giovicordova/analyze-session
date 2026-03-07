@@ -6,6 +6,9 @@ description: >
   spending, cost breakdown, workflow efficiency, tool errors, or session
   optimization — even if they don't say "analyze session" explicitly.
 allowed-tools: ["Bash", "Read"]
+argument-hint: "[session_id] [--scope session|project] [--project path] [--output path]"
+context: fork
+agent: general-purpose
 ---
 
 # Analyze Session Skill
@@ -21,7 +24,7 @@ Parse `$ARGUMENTS` for these parameters:
 | `session_id` | `latest` | Session UUID or "latest" |
 | `--project` | current working directory | Project path to analyze |
 | `--scope` | `session` | `session` for single deep dive, `project` for cross-session trends |
-| `--output` | `./session-analysis.md` | Where to write the report |
+| `--output` | `./SESSION-ANALYSIS.md` | Where to write the report |
 
 ## Execution
 

@@ -755,7 +755,7 @@ def main():
     parser.add_argument("--session-id", default="latest", help="Session UUID or 'latest'")
     parser.add_argument("--project", default=os.getcwd(), help="Project path (default: cwd)")
     parser.add_argument("--scope", choices=["session", "project"], default="session")
-    parser.add_argument("--output", default="./session-analysis.md", help="Output file path")
+    parser.add_argument("--output", default="./SESSION-ANALYSIS.md", help="Output file path")
     args = parser.parse_args()
 
     project_path = os.path.normpath(args.project)

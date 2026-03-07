@@ -1,6 +1,6 @@
 # analyze-session
 
-A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill that analyzes session performance, token costs, cache efficiency, tool usage, and quality metrics. Produces actionable Markdown reports from Claude Code's local data stores.
+A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) plugin that analyzes session performance, token costs, cache efficiency, tool usage, and quality metrics. Produces actionable Markdown reports from Claude Code's local data stores.
 
 ## What it does
 
@@ -9,13 +9,15 @@ A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill that analy
 - **Quality metrics** from Claude's self-assessed facets (outcome, helpfulness, friction)
 - **Issue detection** with fix suggestions (high token turns, tool errors, cache cost, friction patterns)
 - **Two scopes**: single-session deep dive or cross-session project trends
+- **Fix companion**: reads the report and guides you through implementing fixes
 
 ## Install
 
-Clone into your Claude Code skills directory:
+Clone and load as a plugin:
 
 ```bash
-git clone https://github.com/giovicordova/analyze-session.git ~/.claude/skills/analyze-session
+git clone https://github.com/giovicordova/analyze-session.git
+claude --plugin-dir ./analyze-session
 ```
 
 No dependencies — uses Python stdlib only.
@@ -25,7 +27,15 @@ No dependencies — uses Python stdlib only.
 In any Claude Code session:
 
 ```
-/analyze-session
+/analyze-session:analyze-session
+```
+
+The report is saved as `SESSION-ANALYSIS.md` at the root of the project being analyzed.
+
+To fix issues from the report:
+
+```
+/analyze-session:fix-session
 ```
 
 ### Options
@@ -35,14 +45,14 @@ In any Claude Code session:
 | `session_id` | `latest` | Session UUID or "latest" |
 | `--project` | current directory | Project path to analyze |
 | `--scope` | `session` | `session` for single session, `project` for all sessions |
-| `--output` | `./session-analysis.md` | Report output path |
+| `--output` | `./SESSION-ANALYSIS.md` | Report output path |
 
 ### Examples
 
 ```
-/analyze-session                              # latest session, current project
-/analyze-session latest --scope project       # all sessions for current project
-/analyze-session abc123-def --project ~/myapp # specific session, specific project
+/analyze-session:analyze-session                              # latest session, current project
+/analyze-session:analyze-session latest --scope project       # all sessions for current project
+/analyze-session:analyze-session abc123-def --project ~/myapp # specific session, specific project
 ```
 
 ## Sample output
