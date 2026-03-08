@@ -13,10 +13,16 @@ A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) plugin that anal
 
 ## Install
 
-Clone and load as a plugin:
+Add as a marketplace and install globally:
 
 ```bash
-git clone https://github.com/giovicordova/analyze-session.git
+claude plugin marketplace add giovicordova/analyze-session
+claude plugin install sa@sa
+```
+
+Or load directly for a single session:
+
+```bash
 claude --plugin-dir ./analyze-session
 ```
 
@@ -27,7 +33,7 @@ No dependencies — uses Python stdlib only.
 ### Analyze a session
 
 ```
-/analyze-session:analyze
+/sa:run
 ```
 
 The report is saved as `SESSION-ANALYSIS.md` at the root of the project being analyzed.
@@ -35,13 +41,13 @@ The report is saved as `SESSION-ANALYSIS.md` at the root of the project being an
 ### Fix issues from the report
 
 ```
-/analyze-session:analyze --fix
+/sa:run --fix
 ```
 
 ### Auto-apply safe fixes
 
 ```
-/analyze-session:analyze --fix --apply
+/sa:run --fix --apply
 ```
 
 ### Options
@@ -58,11 +64,11 @@ The report is saved as `SESSION-ANALYSIS.md` at the root of the project being an
 ### Examples
 
 ```
-/analyze-session:analyze                                       # latest session, current project
-/analyze-session:analyze latest --scope project                # all sessions for current project
-/analyze-session:analyze abc123-def --project ~/myapp          # specific session, specific project
-/analyze-session:analyze --fix                                 # discuss fixes from report
-/analyze-session:analyze --fix --apply                         # auto-apply + discuss
+/sa:run                                       # latest session, current project
+/sa:run latest --scope project                # all sessions for current project
+/sa:run abc123-def --project ~/myapp          # specific session, specific project
+/sa:run --fix                                 # discuss fixes from report
+/sa:run --fix --apply                         # auto-apply + discuss
 ```
 
 ### Standalone usage
@@ -71,16 +77,14 @@ The analysis scripts can also be run directly from a terminal or wired to a Clau
 
 ```bash
 # Run directly
-./skills/analyze/scripts/run-analysis.sh --scope project
+./skills/run/scripts/run-analysis.sh --scope project
 
 # Run and commit the report
-./skills/analyze/scripts/run-analysis.sh --commit
+./skills/run/scripts/run-analysis.sh --commit
 
 # Run analysis + fix + auto-apply
-./skills/analyze/scripts/run-analysis.sh --fix --apply
+./skills/run/scripts/run-analysis.sh --fix --apply
 ```
-
-The plugin includes a Stop hook (`hooks/hooks.json`) that auto-runs analysis when a session ends. To disable it, remove or rename `hooks/hooks.json`.
 
 To export the plugin as a zip for sharing:
 
@@ -100,7 +104,7 @@ To export the plugin as a zip for sharing:
 | Model | claude-opus-4-6 |
 | Outcome | mostly_achieved |
 
-## Token Breakdown (Transcript)
+## Token Breakdown
 | Category | Tokens | Cost |
 |----------|--------|------|
 | Base Input | 39 | $0.0006 |
@@ -125,26 +129,26 @@ To export the plugin as a zip for sharing:
 
 Reads from Claude Code's local data stores (no API calls):
 
-- `~/.claude/usage-data/session-meta/` — tokens, tools, duration, errors
-- `~/.claude/usage-data/facets/` — outcomes, satisfaction, friction
-- `~/.claude/projects/{encoded-path}/` — full transcripts with per-message token breakdown
+- `~/.claude/projects/{encoded-path}/*.jsonl` — full session transcripts with per-message token breakdown
+- `~/.claude/usage-data/facets/` — outcomes, satisfaction, friction (when available)
 
 ## Plugin structure
 
 ```
 analyze-session/
 ├── .claude-plugin/
-│   └── plugin.json              # plugin manifest
+│   ├── plugin.json              # plugin manifest
+│   └── marketplace.json         # marketplace catalog
 ├── skills/
-│   └── analyze/
+│   └── run/
 │       ├── SKILL.md             # skill definition
 │       └── scripts/
 │           ├── analyze.py       # analysis engine
 │           ├── fix-report.py    # fix plan generator
 │           └── run-analysis.sh  # standalone runner
 ├── hooks/
-│   ├── hooks.json               # Stop hook (auto-analyze on session end)
-│   └── hooks.json.example       # hook config reference
+│   ├── hooks.json               # hooks (empty by default — no auto-triggers)
+│   └── hooks.json.example       # Stop hook example for auto-analysis
 ├── scripts/
 │   └── export-plugin.sh         # zip exporter for distribution
 ├── tests/

@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/skills/analyze/scripts/run-analysis.sh --commit"
+            "command": "${CLAUDE_PLUGIN_ROOT}/skills/run/scripts/run-analysis.sh --commit"
           }
         ]
       }

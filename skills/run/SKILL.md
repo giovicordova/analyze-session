@@ -1,5 +1,5 @@
 ---
-name: analyze
+name: run
 description: >
   Analyze Claude Code session performance, token usage, cost, tool efficiency,
   and quality metrics. Optionally fix issues from the report. Use whenever the

@@ -18,7 +18,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-ZIPFILE="${OUTPUT_DIR}/analyze-session-${VERSION}.zip"
+ZIPFILE="${OUTPUT_DIR}/sa-${VERSION}.zip"
 
 cd "$PLUGIN_ROOT"
 zip -r "$ZIPFILE" \

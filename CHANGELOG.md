@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.0.0] - 2026-03-08
+
+### Changed
+- **Breaking:** Rewrote data layer to read JSONL transcripts from `~/.claude/projects/` instead of stale `usage-data/session-meta/` snapshot
+- Renamed plugin from `analyze-session` to `sa`, skill from `analyze` to `run` — command is now `/sa:run`
+- Added `marketplace.json` for global installation via `claude plugin marketplace add`
+- Removed Stop hook from `hooks/hooks.json` — analysis only runs on command
+- Session metadata (duration, tool counts, message counts) now extracted directly from transcripts
+- Fallback to `cache_creation_input_tokens` when detailed cache breakdown is absent
+
+### Fixed
+- Plugin now finds sessions for all projects (was reading from a stale 200-file snapshot)
+- Path encoding handles both `/` and `_` replacement patterns
+
 ## [2.0.1] - 2026-03-07
 
 ### Added
@@ -14,8 +28,8 @@
 ## [2.0.0] - 2026-03-07
 
 ### Changed
-- Unified `analyze-session` and `fix-session` into a single `analyze` skill
-- Skill invocation is now `/analyze-session:analyze` (was `/analyze-session:analyze-session`)
+- Unified `analyze-session` and `fix-session` into a single `run` skill
+- Skill invocation is now `/sa:run` (was `/analyze-session:analyze`)
 - Fix mode is now `--fix` flag on the unified skill (was separate `/analyze-session:fix-session`)
 
 ### Added
